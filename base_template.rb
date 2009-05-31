@@ -12,7 +12,6 @@ git :init
 run "touch tmp/.gitignore log/.gitignore vendor/.gitignore"
 
 # Set up .gitignore files
-run %{find . -type d -empty | xargs -I xxx touch xxx/.gitignore}
 file '.gitignore', <<-END
 .DS_Store
 coverage/*
@@ -30,24 +29,22 @@ END
 run "echo 'TODO add readme content' > README"
 run "cp config/database.yml config/database.yml.example"
 
-# Install all gems
+# RSpec
 if yes?("Do you want to use RSpec for testing?")
   plugin "rspec", :git => "git://github.com/dchelimsky/rspec.git"
   plugin "rspec-rails", :git => "git://github.com/dchelimsky/rspec-rails.git"
   generate :rspec
 end
 
-if yes?("Do you want to use Shoulda + Factory Girl?")
-  plugin 'shoulda', :git => 'git://github.com/thoughtbot/shoulda.git', :submodule => true
-  plugin 'factory_girl', :git => 'git://github.com/thoughtbot/factory_girl.git', :submodule => true
+# Install gems
+if yes?("Do you want to use Shoulda + Factory Girl?")	
+  gem "thoughtbot-shoulda", :lib => "shoulda", :source => "http://gems.github.com"	
+  gem "thoughtbot-factory_girl", :lib => "factory_girl", :source => "http://gems.github.com"
 end
 
-# Install gems
 gem 'mislav-will_paginate', :lib => 'will_paginate', :source => 'http://gems.github.com'
-rake "gems:install"
 
-# Initialize submodules
-git :submodule => "init"
+rake "gems:install"
 
 
 # Commit all work so far to the repository
