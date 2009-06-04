@@ -46,19 +46,20 @@ gem 'mislav-will_paginate', :lib => 'will_paginate', :source => 'http://gems.git
 
 rake "gems:install"
 
-
 # Commit all work so far to the repository
-git :add => ".", :commit => "-m 'Initial commit'"
+git :add => "."
+git :commit => "-m 'Initial commit'"
 
+# Welcome controller
+generate :controller, "welcome index"
+route "map.root :controller => 'welcome'"
+git :rm => "public/index.html"
 
+git :add => ".", :commit => "-m \"adding welcome controller'"
+
+# User authentication
 name = ask("What do you want a user to be called?")
 generate :nifty_authentication, name
 rake "db:migrate"
 
 git :add => ".", :commit => "-m 'adding authentication'"
-
-generate :controller, "welcome index"
-route "map.root :controller => 'welcome'"
-git :rm => "public/index.html"
-
-git :add => ".", :commit => "-m 'adding welcome controller'"
